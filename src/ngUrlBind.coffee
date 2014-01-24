@@ -8,6 +8,7 @@ angular.module('ngUrlBind', [])
 				scope[property] = JSURL.parse($location.search()[property])
 
 		scope.$watch (-> angular.toJson(scope[property])), (v) ->
+			v='{}' if !v?;
 			querystring = $location.search()
 			querystring[property] = JSURL.stringify(JSON.parse(v))
 			$location.search(querystring)
@@ -18,6 +19,8 @@ angular.module('ngUrlBind', [])
 				newObject = JSON.stringify(JSURL.parse($location.search()[property]))
 				oldObject = angular.toJson(scope[property])
 				if newObject != oldObject
+					
+					angular.extend(scope[property],{}) if !newObject?
 					angular.extend(scope[property], JSON.parse(newObject))
 			else
 				newValue = JSURL.parse($location.search()[property])

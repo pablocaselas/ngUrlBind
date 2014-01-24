@@ -23,6 +23,9 @@ return angular.module('ngUrlBind', []).factory('ngUrlBind', function($location) 
       return angular.toJson(scope[property]);
     }), function(v) {
       var querystring;
+      if (v == null) {
+        v = '{}';
+      }
       querystring = $location.search();
       querystring[property] = JSURL.stringify(JSON.parse(v));
       return $location.search(querystring);
@@ -35,6 +38,9 @@ return angular.module('ngUrlBind', []).factory('ngUrlBind', function($location) 
         newObject = JSON.stringify(JSURL.parse($location.search()[property]));
         oldObject = angular.toJson(scope[property]);
         if (newObject !== oldObject) {
+          if (newObject == null) {
+            angular.extend(scope[property], {});
+          }
           return angular.extend(scope[property], JSON.parse(newObject));
         }
       } else {
